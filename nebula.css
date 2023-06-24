@@ -2,8 +2,7 @@
    by nebuleuse. on discord :3 */
 
 :root {
-    --background-color: #cf8917;
-    --spectate-background-color: #202020;
+    --background: url(https://raw.githubusercontent.com/LCN8888/serveur-list-/main/th%C3%A8me%20orange/fond%20du%20th%C3%A8me%20orange.png);
     --spectate-asteroids-color: white;
     --spectate-player-highlighting-color: white;
     --spectate-leaderboard-highlighting-color: yellow;
