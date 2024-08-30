@@ -1,0 +1,105 @@
+{
+  "desc":
+  {
+    "message": "Une extension utile qui donne accès à des outils pour le Modding, le Ship Editing, et qui améliore votre expérience de jeu dans Starblast."
+  },
+  "info":
+  {
+    "message": "Informations"
+  },
+  "changelog_h3":
+  {
+    "message": "Rien à signaler ici"
+  },
+  "changelog_h4":
+  {
+    "message": "Amusez-vous bien"
+  },
+  "currentmode":
+  {
+    "message": "Mode actuel"
+  },
+  "by":
+  {
+    "message": "Fait par %s"
+  },
+  "contrib_msg":
+  {
+    "message": "Vous pouvez donner des idées de nouveaux outils pour cet éditeur <ici>"
+  },
+  "reload":
+  {
+    "message": "Note: Si les outils ne fonctionnent pas, <rechargez la page>"
+  },
+  "settings":
+  {
+    "message": "Paramètres"
+  },
+  "feedback":
+  {
+    "message": "Rapport de bugs et retours"
+  },
+  "fulllog":
+  {
+    "message": "Voir tous les changements"
+  },
+  "insettings":
+  {
+    "message": "Paramètres en jeu"
+  },
+  "wait":
+  {
+    "message": "Chargement"
+  },
+  "latest_log":
+  {
+    "message": "Derniers changements"
+  },
+  "main_h3":
+  {
+    "message": "Rien de plus à voir ici"
+  },
+  "translate":
+  {
+    "message":"Aidez à améliorer cette traduction"
+  },
+  "changelog_set":
+  {
+    "message": "Quand %s est cliqué"
+  },
+  "changelog_set_opt_1":
+  {
+    "message": "Ouvrir le panneau des modifications et ajouts du jeu"
+  },
+  "changelog_set_opt_2":
+  {
+    "message": "Ouvrir %s"
+  },
+  "changelog_set_desc":
+  {
+    "message": "Cliquez ici pour voir un aperçu des changements (seconde option seulement)"
+  },
+  "choose_language": {
+    "message": "Langage"
+  },
+  "default_lang": {
+    "message": "Langage du navigateur"
+  },
+  "lang_warn": {
+    "message": "Les changements vont s'effectuer la prochaine fois que vous rechargez la page ou que vous ouvrez l'extension"
+  },
+  "shortcut_toggle": {
+    "message": "Activer les raccourcis"
+  },
+  "open_page": {
+    "message": "Ouvir la page"
+  },
+  "translators_message":
+  {
+    "message": "Traduction faite par %s"
+  },
+  "translators":
+  {
+    "message": "Wolfan"
+  }
+}
