@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Starblast Modding — Theme System
 // @namespace   http://tampermonkey.net/
-// @version     3.7
+// @version     3.8
 // @description Neon / Minimal / Retro / Fluidic / Bubble / Dark / Gradient themes + custom BG image
 // @author      Nébuleuse
 // @icon        https://raw.githubusercontent.com/NebuleuseTheGreat/LCN8888/refs/heads/main/ModdingSEthemelogo.png
@@ -9,6 +9,7 @@
 // @match       https://starblast.data.neuronality.com/modding/moddingcontent.html
 // @match       https://starblast.io/shipeditor/*
 // @license     Copyright © 2026 Nébuleuse. All rights reserved. Reproduction, modification, and redistribution of the content of this script are permitted on the sole condition that my name is credited. I would also like to thank Bhpsngum for allowing me to use the features he created for SET, as well as Basit for the initial inspiration.
+// @grant       none
 // ==/UserScript==
 
 (function () {
@@ -985,7 +986,6 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
         wikiLink.style.margin = '0 5px';
         termsLink?.parentNode?.insertBefore(wikiLink, termsLink.nextSibling);
 
-        // Load Font Awesome 4 for button icons
         (() => {
             const fa = document.createElement('link');
             fa.rel  = 'stylesheet';
@@ -1004,7 +1004,6 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             if (!rib) return;
             if (document.getElementById('dragMode')) return;
 
-            // --- Hide Preview Panel / Hide Editor Panel ---
             const hview = document.createElement('a');
             hview.id = 'Preview';
             hview.href = '#';
@@ -1030,12 +1029,12 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
                 let elem     = heditorSE;
 
                 if (isHide) {
-                    if (d) { // hide editor panel
+                    if (d) {
                         elempos = [editor, render];
                         elem = hview;
                         bar.style.display = 'none';
                         rib.style.width = '98vw';
-                    } else { // hide preview panel
+                    } else {
                         rib.style.display = 'none';
                         bar.style.width = '98vw';
                     }
@@ -1056,7 +1055,6 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             bar.appendChild(heditorSE);
             rib.insertBefore(hview, rib.childNodes[0]);
 
-            // --- Drag Mode / Rotate Mode (hooks ShipEditor.prototype.mouseMove) ---
             const hookSE = () => {
                 if (typeof window.ShipEditor === 'undefined') return setTimeout(hookSE, 250);
                 const SP = ShipEditor.prototype;
@@ -1072,7 +1070,7 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
                         /return\s([^]+);*}$/,
                         `return window.isRotating ? (!this.camera && (this.camera = Object.values(this).find(v => v && String(v.type).includes("Camera"))), this.getCameraRatio(this), this.camera.position.x -= e.movementX * this.camera_ratio.x, this.camera.position.y += e.movementY * this.camera_ratio.y) : ($1)}`
                     ))();
-                } catch(err) { console.warn('[ThemeScript] ShipEditor mouseMove hook failed:', err); }
+                } catch(_) {}
 
                 const dragBtn = document.createElement('a');
                 dragBtn.id = 'dragMode';
@@ -1125,7 +1123,6 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             if (fv) { fv.width = 0; fv.height = 0; }
         }, 900);
 
-        // Load Font Awesome 4 for button icons
         (() => {
             const fa = document.createElement('link');
             fa.rel  = 'stylesheet';
@@ -1139,12 +1136,27 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             const terminal = main.querySelector('.runpanelcontainer');
             const editor   = main.querySelector('.editorpanel');
             if (!terminal || !editor || !editor.childNodes[1]) return;
-            const bar   = editor.childNodes[1];
-            const consl = terminal.childNodes[1] && terminal.childNodes[1].childNodes[1];
-            if (!consl) return;
-            if (document.getElementById('runstopmod')) return; // already initialized
+            const bar = editor.childNodes[1];
 
-            // --- Run / Terminate Mod button (replaces original #runmod) ---
+            let consl = (terminal.childNodes[1] && terminal.childNodes[1].childNodes[1]) || null;
+            if (!consl) consl = terminal.querySelector('.iconsbar:not(.runiconsbar)') || terminal.querySelector('.iconsbar');
+            if (!consl) return;
+
+            if (document.getElementById('runstopmod')) return;
+
+            function getTerminalInstance() {
+                const jq = window.$ || window.jQuery;
+                if (jq) {
+                    try { const t = jq('#terminal').terminal(); if (t) return t; } catch(_) {}
+                    try { const t = jq('#terminal').data('terminal'); if (t) return t; } catch(_) {}
+                }
+                try { if (window.$ && window.$.terminal && window.$.terminal.active) return window.$.terminal.active(); } catch(_) {}
+                try { if (window.jQuery && window.jQuery.terminal && window.jQuery.terminal.active) return window.jQuery.terminal.active(); } catch(_) {}
+                return null;
+            }
+            function termExec(cmd) { try { const t = getTerminalInstance(); if (t) t.exec(cmd, true); } catch(_) {} }
+            function termClear()   { try { const t = getTerminalInstance(); if (t) t.clear(); } catch(_) {} }
+
             const origRun = document.getElementById('runmod');
             if (origRun) origRun.remove();
 
@@ -1156,11 +1168,10 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             runBtn.innerHTML = '<i class="fa fa-fw fa-play"></i>';
             runBtn.addEventListener('click', e => {
                 e.preventDefault();
-                try { window.$('#terminal').terminal().exec(runBtn.getAttribute('cmd'), true); } catch(_) {}
+                termExec(runBtn.getAttribute('cmd'));
             });
             bar.appendChild(runBtn);
 
-            // --- Open Game Frame button (hidden until mod is running) ---
             const testBtn = document.createElement('a');
             testBtn.id = 'test';
             testBtn.href = '#';
@@ -1169,11 +1180,10 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             testBtn.innerHTML = '<i class="fa fa-fw fa-gamepad"></i>';
             testBtn.addEventListener('click', e => {
                 e.preventDefault();
-                try { window.$('#terminal').terminal().exec('test', true); } catch(_) {}
+                termExec('test');
             });
             bar.appendChild(testBtn);
 
-            // --- Region selector ---
             const regions = ['Asia', 'America', 'Europe'];
             const regc = document.createElement('select');
             regc.id = 'region-select';
@@ -1191,22 +1201,20 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
                 }
             } catch(_) {}
             regc.addEventListener('change', () => {
-                try { window.$('#terminal').terminal().exec('region ' + regc.value, true); } catch(_) {}
+                termExec('region ' + regc.value);
             });
             consl.appendChild(regc);
 
-            // --- Clear Console button ---
             const clearBtn = document.createElement('a');
             clearBtn.href = '#';
             clearBtn.setAttribute('data-tooltip', 'Clear Console');
             clearBtn.innerHTML = '<i class="fa fa-fw fa-trash-o"></i>';
             clearBtn.addEventListener('click', e => {
                 e.preventDefault();
-                try { window.$('#terminal').terminal().clear(); } catch(_) {}
+                termClear();
             });
             consl.appendChild(clearBtn);
 
-            // --- Hide Console Panel / Hide Editor Panel buttons ---
             const hconsl = document.createElement('a');
             hconsl.id = 'Console';
             hconsl.href = '#';
@@ -1261,7 +1269,6 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
             bar.appendChild(heditorBtn);
             consl.insertBefore(hconsl, consl.childNodes[0]);
 
-            // --- Hook Modding prototype (state sync + beforeunload guard) ---
             const hookModding = () => {
                 if (typeof window.Modding === 'undefined') return setTimeout(hookModding, 250);
 
@@ -1310,14 +1317,11 @@ fa.fa-fw.fa-forward.colors:before{content:"\\f200" !important;}`;
                         }
                         return result;
                     };
-                } catch(err) {
-                    console.warn('[ThemeScript] Modding prototype hook failed:', err);
-                }
+                } catch(_) {}
             };
             hookModding();
         }
 
-        // Wait for the editor DOM to be ready before inserting tools
         const editorReady = () =>
             document.querySelector('body > div.wrapper > div.centerpanel > .editorpanel');
         if (editorReady() && editorReady().childNodes[1]) {
